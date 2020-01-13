@@ -1,0 +1,157 @@
+{% load static %}
+{% load cart_template_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Payment View</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <style>
+    body { margin-top:20px; };
+.panel-title {display: inline;font-weight: bold;};
+.checkbox.pull-right { margin: 0; };
+.pl-ziro { padding-left: 0px; };
+  </style>
+</head>
+
+<body class="grey lighten-3">
+
+  <!-- Navbar -->
+  <nav class="navbar sticky-top navbar-light bg-light">
+    <li>   <a href="/" style="color: black;text-decoration:underline;">   Home  </a></li>
+    <li style="padding-right: 12px;padding-left: 12px;"> <a style="color: black;">Hello - {{user.first_name}}</a></li>
+<li><a href="/accounts/logout" style="color: black;">LogOut</a></li>
+    <li><i class="fa fa-shopping-cart"></i><a href="/order-summary/" style="color: black;">My Cart</a><span>  [{{ request.user | cart_item_count }}]</span></li>
+    
+  </nav>
+        <main class="container">
+          <h2>Payment portal</h2>
+        </main>
+  <div>
+    {% if messages %}	
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+{% endif %}
+</div>
+<!-- header -->
+
+
+            <!-- <form method="POST" class="card-body">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <button type="submit" class="btn btn-primary">Checkout</button>
+            </form> -->
+            <!--Card content--><div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h3 class="panel-title">
+                      Payment Details
+                  </h3>
+                  <div class="checkbox pull-right">
+                      <label>
+                          <input type="checkbox" />
+                          Remember
+                      </label>
+                  </div>
+              </div>
+              <div class="panel-body">
+                  <form role="form">
+                  <div class="form-group">
+                      <label for="cardNumber">
+                          CARD NUMBER</label>
+                      <div class="input-group">
+                          <input type="text" class="form-control" id="cardNumber" placeholder="Valid Card Number"
+                              required autofocus />
+                          <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-7 col-md-7">
+                          <div class="form-group">
+                              <label for="expityMonth">
+                                  EXPIRY DATE</label>
+                              <div class="col-xs-6 col-lg-6 pl-ziro">
+                                  <input type="text" class="form-control" id="expityMonth" placeholder="MM" required />
+                              </div>
+                              <div class="col-xs-6 col-lg-6 pl-ziro">
+                                  <input type="text" class="form-control" id="expityYear" placeholder="YY" required /></div>
+                          </div>
+                      </div>
+                      <div class="col-xs-5 col-md-5 pull-right">
+                          <div class="form-group">
+                              <label for="cvCode">
+                                  CV CODE</label>
+                              <input type="password" class="form-control" id="cvCode" placeholder="CV" required />
+                          </div>
+                      </div>
+                  </div>
+                  </form>
+              </div>
+          </div>
+          <ul class="nav nav-pills nav-stacked">
+              <li class="active"><a href="#">Final Payment<span class="badge badge-pill badge-info" style="padding: 15px; font-size: 20px">₹{{ order.get_total }}</span></a>
+              </li>
+          </ul>
+          <br/>
+          <a href="#" class="btn btn-success btn-lg btn-block" role="button">Pay</a>
+      </div>
+  </div>
+</div>
+
+            
+
+          </div>
+          <!--/.Card-->
+
+        </div>
+
+
+           
+    </div>
+    <!--Grid column-->
+
+
+
+</div>
+</main>
+
+
+
+
+<script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+  <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+  </script>
+</body>
+{% endblock content %}

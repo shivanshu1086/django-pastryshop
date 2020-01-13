@@ -1,0 +1,155 @@
+{% load static %}
+{% load cart_template_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Order Tracker</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+</head>
+
+<body class="grey lighten-3">
+
+  <!-- Navbar -->
+  <nav class="navbar sticky-top navbar-light bg-light">
+    <li>   <a href="/" style="color: black;text-decoration:underline;">   Home  </a></li>
+    <li style="padding-right: 12px;padding-left: 12px;"> <a style="color: black;">Hello - {{user.first_name}}</a></li>
+    <li><a href="/accounts/logout" style="color: black;">LogOut</a></li>
+    <li><i class="fa fa-shopping-cart"></i><a href="/order-summary/" style="color: black;">My Cart</a><span>  [{{ request.user | cart_item_count }}]</span></li>
+    
+  </nav>
+
+  <div>
+    {% if messages %}	
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+{% endif %}
+</div>
+<!-- header -->
+<main >
+    <div class="container wow fadeIn">
+
+      <!-- Heading -->
+      <h2 class="my-5 h2 text-center">Track Your Order</h2>
+
+      <p class="my-5 h4 text-center">Enter your order id and Email to track your order!</p>
+
+      <main >
+        <div class="container wow fadeIn">
+          <div class="row">
+            <div class="col-md-8 mb-4">
+              <div class="card">
+                <!-- <form method="POST">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                  <button type="submit" class="btn btn-primary">Checkout</button>
+                </form> -->
+                <!--Card content-->
+                <form class="card-body" method="POST" id="trackerForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                  <div class="md-form mb-5">
+                    <input type="text" id="item1" name="Order_id" class="form-control" placeholder="ex.(1234....)">
+                    <label for="address" class="font-weight-bold display-4" style="font-size: large;">  Enter Order Id</label>
+                  </div>
+                  <div class="md-form mb-5">
+                    <input type="email" id="item2" name="email" class="form-control" placeholder="abc....">
+                    <label for="address-2" class="font-weight-bold h2" style="font-size: large;">Email</label>
+                  </div>
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Track Order</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detaling area -->
+
+        <div class="container-fluid">
+            <div class="col my-4">
+                <h2>Your order status:</h2>
+                <div class="my-4">
+                    <ul class="list-group" id="items">
+                        <li>Update order</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </main>
+</div>
+</main>
+<script>
+  $('#trackerForm').submit(function(event){
+      $('#item1').empty();
+      $('#item2').empty();
+      var formData = {
+          'Order_id': $('#item1').val(),
+          'user': $('#item2').val(),
+          'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+      };
+      $.ajax({
+          type:'POST',
+          url: '/tracking/track/',
+          data: formData,
+          encode: true
+      }).done(function(data){
+        console.log(data);
+        updates = JSON.parse(data);
+            if (updates.length > 0 & updates != {}) {
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${text}
+                    <span class="badge badge-primary badge-pill">${time}</span>
+                </li>`
+                    $('#items').append(mystr);
+                }
+            } else {
+            	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    Sorry, We are not able to fetch this order id and Email. Make sure to type correct order Id and Email</li>`
+            	$('#items').append(mystr);
+            }
+      });
+      event.preventDefault();
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+  
+</body>
+</html>
+{% endblock content %}

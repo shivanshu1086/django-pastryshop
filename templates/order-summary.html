@@ -1,0 +1,163 @@
+
+{% load static %}
+{% load cart_template_tags %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="{% static 'img/logo.png' %}">
+    <!-- Author Meta -->
+    <meta name="author" content="colorlib">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>Bakery</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/ae4d2bd5b2.js" crossorigin="anonymous"></script> -->
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <!--
+        CSS
+        ============================================= -->
+        <link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+        <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">							
+        <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">			
+        <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+        <!--HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries-->
+<!--[if lt IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
+<![endif]-->
+    </head>
+    <body>	
+    
+
+        <nav class="navbar sticky-top navbar-light bg-light">
+            <li>   <a href="/" style="color: black;text-decoration:underline;">   Home  </a></li>
+            <li style="padding-right: 12px;padding-left: 12px;"> <a style="color: black;">Hello - {{user.first_name}}</a></li>
+			<li><a href="/accounts/logout" style="color: black;">LogOut</a></li>
+            <li><i class="fa fa-shopping-cart"></i><a style="color: black;">My Cart</a><span>  [{{ request.user | cart_item_count }}]</span></li>
+            
+          </nav>
+          <div>
+            {% if messages %}	
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endfor %}
+        {% endif %}
+      </div>
+          
+    <div class="container">
+        <div class="table-responsive text-nowrap">
+            <h2>Order Summary</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Item title</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total Item Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order_item in object.items.all %}
+                  
+                    <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ order_item.item.name }}</td>
+                    <td>₹{{ order_item.item.price }}</td>
+                    <td>
+                      <a href="/remove-single-item-from-cart/{{ order_item.item.slug }}"><i class="fa fa-minus mr-2"></i></a>
+                            {{ order_item.quantity }}
+                        <a href="/add_to_cart/{{ order_item.item.slug }}"><i class="fa fa-plus ml-2"></i></a>
+                    </td>
+                    <td>₹{{ order_item.get_total_item_price }}
+                        <a style="color: red;float:right" href="/remove_from_cart/{{ order_item.item.slug }}"><i class="fa fa-trash"></i></a>
+                    </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Your cart is empty</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <a href="/" class="btn btn-primary float-right">Continue Shopping</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if object.get_total %}
+                <tr>
+                    <td colspan="4"><b style="font-weight: bold;font-size:x-large">Order Total</b></td>
+                    <td style="font-weight: bold;font-size:x-large">₹{{ object.get_total }}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="5">
+                        <a href="/checkout/" class="btn btn-warning float-right ml-2">Proceed to Checkout</a>
+                        <a href="/" class="btn btn-primary float-right">Continue Shopping</a>
+                    </td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+        <script src="{% static 'js/wow.min.js' %}"></script>
+        <script>
+        new WOW().init();
+        </script>
+      <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>			
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+        <script src="{% static 'js/easing.min.js' %}"></script>			
+      <script src="{% static 'js/hoverIntent.js' %}"></script>
+      <script src="{% static 'js/superfish.min.js' %}"></script>	
+      <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+      <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>	
+       <script src="{% static 'js/jquery-ui.js' %}"></script>			
+      <script src="{% static 'js/owl.carousel.min.js' %}"></script>						
+      <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>							
+      <script src="{% static 'js/mail-script.js' %}"></script>	
+      <script src="{% static 'js/main.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/7.1 wow.min.js.js' %}"></script>
+      <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+      <script src="{% static 'js/waypoints.js' %}"></script>
+  </body>
+
+
+
+
+
+{% endblock content %}
